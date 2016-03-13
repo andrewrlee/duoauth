@@ -1,10 +1,11 @@
-# duoauth
+package uk.co.optimisticpanda.duoauth;
 
-Simple synchronous gateway authenticating against https://duo.com/ using jersey client and jackson
+import static javax.ws.rs.client.ClientBuilder.newClient;
 
-##Sample
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-```java
+public class SampleCall {
 
     private static final Logger L = LoggerFactory.getLogger(SampleCall.class);
 
@@ -18,8 +19,6 @@ Simple synchronous gateway authenticating against https://duo.com/ using jersey 
 
         AuthResponse response = gateway.authenticatePasscode("jeff", "647660");
         L.info("Successful?: {}", response.isSuccess());
-        L.info("Message: {}", response.getMessage().orElse("No Message"));
-
+        L.info("Message: {}", response.getMessage().orElse(""));
     }
-
-```
+}
