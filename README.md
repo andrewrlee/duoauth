@@ -1,6 +1,6 @@
 # duoauth
 
-Simple synchronous gateway authenticating against https://duo.com/ using jersey client and jackson
+Simple synchronous gateway authenticating against [duo security](https://duo.com/) using jersey client and jackson
 
 ##Sample
 
@@ -17,8 +17,9 @@ Simple synchronous gateway authenticating against https://duo.com/ using jersey 
         DuoGateway gateway = new DuoGateway(newClient(), hostName, key, secret);
 
         AuthResponse response = gateway.authenticatePasscode("jeff", "647660");
-        L.info("Successful?: {}", response.isSuccess());
-        L.info("Message: {}", response.getMessage().orElse("No Message"));
+        L.info("Successful?: {}", !response.isError());
+        L.info("Allowed?:    {}", response.isAllowed());
+        L.info("Message:     {}", response.getMessage().orElse(""));
 
     }
 

@@ -25,17 +25,17 @@ public class DuoGateway {
     private static final String AUTH_PATH = "/auth/v2/auth";
     private static Logger L = LoggerFactory.getLogger(DuoGateway.class);
     private final Client client;
+    private final String hostName;
     private final String key;
     private final String secret;
-    private final String hostName;
 
     public DuoGateway(Client client, String hostName, String key, String secret) {
         this.client = client;
         this.client.register(HttpAuthenticationFeature.basicBuilder().build());
         this.client.register(JacksonFeature.class);
+        this.hostName = hostName;
         this.key = key;
         this.secret = secret;
-        this.hostName = hostName;
     }
 
     public AuthResponse authenticatePasscode(String username, String passcode) {
@@ -65,7 +65,7 @@ public class DuoGateway {
                 .post(entity(form, APPLICATION_FORM_URLENCODED));
     
         response.bufferEntity();
-        L.debug("Received Status: {}", response.getStatus());
+        L.debug("Received Status:  {}", response.getStatus());
         L.debug("Received Payload: {}", response.readEntity(String.class));
         return response.readEntity(AuthResponse.class);
     }
