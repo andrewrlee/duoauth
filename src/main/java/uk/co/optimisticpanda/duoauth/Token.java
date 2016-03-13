@@ -18,14 +18,14 @@ import javax.ws.rs.core.Form;
 
 import jersey.repackaged.com.google.common.base.Throwables;
 
-public class PasswordGen {
+public class Token {
 
     public static String generate(String method, String hostName, String path, 
             Form form, String date, String key, String secret) {
 
         String params = form.asMap().entrySet().stream()
                 .sorted(Entry.comparingByKey())
-                .map(PasswordGen::asParams)
+                .map(Token::asParams)
                 .collect(joining("&"));
 
         String raw = join("\n", asList(

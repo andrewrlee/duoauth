@@ -45,12 +45,12 @@ public class DuoGateway {
 
         String date = ofPattern("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z").format(now());
 
-        String password = PasswordGen.generate(POST, hostName, AUTH_PATH, form, date, key, secret);
+        String token = Token.generate(POST, hostName, AUTH_PATH, form, date, key, secret);
 
         Response response = client.target(format("https://%s", hostName)).path(AUTH_PATH )
                 .request(APPLICATION_JSON)
                 .property(HTTP_AUTHENTICATION_BASIC_USERNAME, key)
-                .property(HTTP_AUTHENTICATION_BASIC_PASSWORD, password)
+                .property(HTTP_AUTHENTICATION_BASIC_PASSWORD, token)
                 .header(DATE, date)
                 .post(entity(form, APPLICATION_FORM_URLENCODED));
 

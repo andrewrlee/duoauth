@@ -10,19 +10,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.co.optimisticpanda.duoauth.PasswordGen;
+import uk.co.optimisticpanda.duoauth.Token;
 
-public class PasswordGenTest {
+public class TokenTest {
 
-    private static final Logger L = LoggerFactory.getLogger(PasswordGen.class);
+    private static final Logger L = LoggerFactory.getLogger(TokenTest.class);
 
-    // This checks the auth token gen example form here: https://duo.com/docs/authapi#authentication
+    // This checks that the token we generate matches the example from here: https://duo.com/docs/authapi#authentication
     @Test
-    public void generateCorrectTokenAsExample() {
+    public void generateSameTokenAsExample() {
         Form form = new Form("username", "root")
             .param("realname", "First Last");
         String apiKey = "DIWJ8X6AEYOR5OMC6TQ1";
-        String generated = PasswordGen.generate(
+        String generated = Token.generate(
                 "POST", 
                 "api-XXXXXXXX.duosecurity.com", 
                 "/accounts/v1/account/list", 
