@@ -18,7 +18,8 @@ public class SampleCall {
         DuoGateway gateway = new DuoGateway(newClient(), hostName, key, secret);
 
         AuthResponse response = gateway.authenticatePasscode("jeff", "647660");
-        L.info("Successful?: {}", response.isSuccess());
-        L.info("Message: {}", response.getMessage().orElse(""));
+        L.info("Successful?: {}", !response.isError());
+        L.info("Allowed?:    {}", response.isAllowed());
+        L.info("Message:     {}", response.getMessage().orElse(""));
     }
 }

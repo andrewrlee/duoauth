@@ -11,6 +11,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD;
 import static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_USERNAME;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Response;
@@ -47,13 +48,22 @@ public class DuoGateway {
 
         String token = Token.generate(POST, hostName, AUTH_PATH, form, date, key, secret);
 
+        try {
+            return call(form, date, token);
+        } catch (ProcessingException e) {
+            L.error("Problem making request",e);
+            return AuthResponse.failure(e.getMessage());
+        }
+    }
+
+    private AuthResponse call(Form form, String date, String token) {
         Response response = client.target(format("https://%s", hostName)).path(AUTH_PATH )
                 .request(APPLICATION_JSON)
                 .property(HTTP_AUTHENTICATION_BASIC_USERNAME, key)
                 .property(HTTP_AUTHENTICATION_BASIC_PASSWORD, token)
                 .header(DATE, date)
                 .post(entity(form, APPLICATION_FORM_URLENCODED));
-
+    
         response.bufferEntity();
         L.debug("Received Status: {}", response.getStatus());
         L.debug("Received Payload: {}", response.readEntity(String.class));

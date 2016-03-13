@@ -15,16 +15,31 @@ public class AuthResponse {
     @JsonProperty
     private String stat;
     @JsonProperty
+    private String code;
+    @JsonProperty
     private String message;
 
     @JsonCreator
     private AuthResponse() {
     }
 
-    public boolean isSuccess() {
+    public static AuthResponse failure(String message) {
+        AuthResponse response = new AuthResponse();
+        response.stat = "FAIL";
+        response.message = message;
+        response.code = "unspecified";
+        return response;
+    }
+    
+    public boolean isAllowed() {
         return response != null && response.status.equals("allow");
     }
 
+    public boolean isError() {
+        return !stat.equals("OK");
+    }
+
+    
     public Optional<String> getMessage() {
         Optional<String> mes = Optional.ofNullable(response).flatMap(resp -> Optional.ofNullable(resp.statusMessage));
         return mes.isPresent() ? mes : Optional.ofNullable(message);
@@ -34,6 +49,10 @@ public class AuthResponse {
         return Optional.ofNullable(response).flatMap(resp -> Optional.ofNullable(resp.reason));
     }
 
+    public Optional<String> getCode() {
+        return Optional.ofNullable(code);
+    }
+    
     @Override
     public int hashCode() {
         return Objects.hash(response, stat);
@@ -76,7 +95,10 @@ public class AuthResponse {
             if (getClass() != obj.getClass())
                 return false;
             Response other = (Response) obj;
-            return Objects.equals(reason, other.reason) && Objects.equals(result, other.result) && Objects.equals(status, other.status) && Objects.equals(statusMessage, other.statusMessage);
+            return Objects.equals(reason, other.reason) 
+                    && Objects.equals(result, other.result) 
+                    && Objects.equals(status, other.status) 
+                    && Objects.equals(statusMessage, other.statusMessage);
         }
     }
 }
